@@ -52,16 +52,24 @@ async function enviarParaUtmify(dadosVenda) {
           id: 'tkt_rewards_upsell',
           name: dadosVenda.productName || 'Taxa TikTok Rewards',
           price: dadosVenda.amountCents / 100,
+          priceInCents: dadosVenda.amountCents,
+          planId: 'plan_tkt_rewards',
+          planName: 'Plano TikTok Rewards',
           quantity: 1
         }
       ],
+      commission: {
+        totalPriceInCents: dadosVenda.amountCents,
+        gatewayFeeInCents: Math.round(dadosVenda.amountCents * 0.05), // simulado
+        userCommissionInCents: Math.round(dadosVenda.amountCents * 0.95) // líquido
+      },
       trackingParameters: {
-        src: dadosVenda.tracking.src || '',
-        utmSource: dadosVenda.tracking.utm_source || '',
-        utmMedium: dadosVenda.tracking.utm_medium || '',
-        utmCampaign: dadosVenda.tracking.utm_campaign || '',
-        utmContent: dadosVenda.tracking.utm_content || '',
-        utmTerm: dadosVenda.tracking.utm_term || ''
+        src: dadosVenda.tracking.src || null,
+        utm_source: dadosVenda.tracking.utm_source || null,
+        utm_medium: dadosVenda.tracking.utm_medium || null,
+        utm_campaign: dadosVenda.tracking.utm_campaign || null,
+        utm_content: dadosVenda.tracking.utm_content || null,
+        utm_term: dadosVenda.tracking.utm_term || null
       }
     };
 
