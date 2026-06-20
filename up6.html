@@ -480,7 +480,7 @@ Após o pagamento, o saldo será liberado com as taxas inclusas.
         </div>
     </div>
 
-    <input type="text" id="pix-copy-input" style="position:absolute;left:-9999px;" readonly>
+    <input type="text" id="pix-copy-input" inputmode="none" tabindex="-1" readonly aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;pointer-events:none;">
 
     <script>
         let _pixTxid = null;

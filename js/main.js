@@ -1147,29 +1147,37 @@
     if (btnCopiarPix && pixCopyInput) {
       btnCopiarPix.addEventListener("click", function (ev) {
         ev.preventDefault();
-        pixCopyInput.select();
-        pixCopyInput.setSelectionRange(0, 99999); // Mobile
 
-        try {
-          navigator.clipboard.writeText(pixCopyInput.value).then(() => {
-            const originalText = btnCopiarPix.textContent;
-            btnCopiarPix.textContent = "Copiado!";
-            btnCopiarPix.style.backgroundColor = "#10b981"; // Muda para verde
-            setTimeout(() => {
-              btnCopiarPix.textContent = originalText;
-              btnCopiarPix.style.backgroundColor = "";
-            }, 2000);
-          });
-        } catch (err) {
-          // Fallback se clipboard API falhar
-          document.execCommand("copy");
-          const originalText = btnCopiarPix.textContent;
+        const textToCopy = pixCopyInput.value;
+        const originalText = btnCopiarPix.textContent;
+
+        function showCopied() {
           btnCopiarPix.textContent = "Copiado!";
           btnCopiarPix.style.backgroundColor = "#10b981";
           setTimeout(() => {
             btnCopiarPix.textContent = originalText;
             btnCopiarPix.style.backgroundColor = "";
           }, 2000);
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(textToCopy).then(() => {
+            showCopied();
+          }).catch(() => {
+            // Fallback: seleciona, copia e desfoca imediatamente
+            pixCopyInput.select();
+            pixCopyInput.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            pixCopyInput.blur();
+            showCopied();
+          });
+        } else {
+          // Fallback: seleciona, copia e desfoca imediatamente
+          pixCopyInput.select();
+          pixCopyInput.setSelectionRange(0, 99999);
+          document.execCommand("copy");
+          pixCopyInput.blur();
+          showCopied();
         }
       });
     }
