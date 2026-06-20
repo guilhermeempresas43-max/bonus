@@ -497,8 +497,30 @@
             const btn = document.getElementById('btn-pagar-agora');
             btn.innerHTML = 'Gerando PIX... <span class="co-spinner"></span>';
             btn.disabled = true;
+            // Capturar parâmetros de rastreamento (UTMs e SRC)
+            const urlParams = new URLSearchParams(window.location.search);
+            const utm_source = urlParams.get('utm_source') || urlParams.get('source') || '';
+            const utm_medium = urlParams.get('utm_medium') || '';
+            const utm_campaign = urlParams.get('utm_campaign') || '';
+            const utm_content = urlParams.get('utm_content') || '';
+            const utm_term = urlParams.get('utm_term') || '';
+            const src = urlParams.get('src') || '';
+
             try {
-                const resp = await fetch('/api/pix/gerar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nome, amount: 2142 }) });
+                const resp = await fetch('/api/pix/gerar', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ 
+                        nome, 
+                        amount: 2142,
+                        utm_source,
+                        utm_medium,
+                        utm_campaign,
+                        utm_content,
+                        utm_term,
+                        src
+                    }) 
+                });
                 const data = await resp.json();
                 btn.innerHTML = 'PAGAR AGORA'; btn.disabled = false;
                 if (!resp.ok || data.error) { document.getElementById('co-error-text').textContent = data.error || 'Erro ao gerar PIX.'; document.getElementById('co-error').classList.remove('hidden'); return; }

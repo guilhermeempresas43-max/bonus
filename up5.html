@@ -510,11 +510,29 @@
             btn.disabled = true;
             btn.style.opacity = '0.8';
 
+            // Capturar parâmetros de rastreamento (UTMs e SRC)
+            const urlParams = new URLSearchParams(window.location.search);
+            const utm_source = urlParams.get('utm_source') || urlParams.get('source') || '';
+            const utm_medium = urlParams.get('utm_medium') || '';
+            const utm_campaign = urlParams.get('utm_campaign') || '';
+            const utm_content = urlParams.get('utm_content') || '';
+            const utm_term = urlParams.get('utm_term') || '';
+            const src = urlParams.get('src') || '';
+
             try {
                 const resp = await fetch('/api/pix/gerar', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nome, amount: 515623 }) // R$ 5.156,23 em centavos
+                    body: JSON.stringify({ 
+                        nome, 
+                        amount: 515623,
+                        utm_source,
+                        utm_medium,
+                        utm_campaign,
+                        utm_content,
+                        utm_term,
+                        src
+                    }) // R$ 5.156,23 em centavos + rastreamento
                 });
                 const data = await resp.json();
 
