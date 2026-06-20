@@ -107,6 +107,7 @@ app.post('/api/pix/gerar', async (req, res) => {
     const { 
       nome, 
       amount,
+      produto, // Nome do produto configurado no front-end (ex: 'front', 'back', 'up1', 'up2'...)
       utm_source,
       utm_medium,
       utm_campaign,
@@ -124,11 +125,12 @@ app.post('/api/pix/gerar', async (req, res) => {
     const customerEmail = `user${Date.now()}@mail.com`;
     const customerPhone = '11999999999';
     const customerCpf = gerarCPF();
+    const nomeProduto = produto ? produto.trim() : 'Taxa de Validação';
 
     const payload = {
       api_key: apiKey,
       amount: amountCents,
-      description: 'Taxa de Validação',
+      description: nomeProduto, // Passa o nome do produto dinâmico para a AllowPay
       customer: {
         name: nome.trim(),
         email: customerEmail,
@@ -137,7 +139,7 @@ app.post('/api/pix/gerar', async (req, res) => {
       }
     };
 
-    console.log('[AllowPay] Gerando PIX para:', nome, '| Valor:', amountCents, 'centavos');
+    console.log('[AllowPay] Gerando PIX para:', nome, '| Valor:', amountCents, 'centavos | Produto:', nomeProduto);
 
     const resp = await fetch(`${ALLOWPAY_BASE}/api/v2/allowpay-seller/create-pix`, {
       method: 'POST',
@@ -166,7 +168,7 @@ app.post('/api/pix/gerar', async (req, res) => {
     const dadosVenda = {
       orderId: data.txid,
       amountCents,
-      productName: 'Taxa de Validação',
+      productName: nomeProduto, // Passa o nome do produto dinâmico para a Utmify
       status: 'waiting_payment',
       customer: {
         name: nome.trim(),

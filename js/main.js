@@ -1043,11 +1043,37 @@
         btnCheckoutPagar.style.pointerEvents = 'none';
         btnCheckoutPagar.innerHTML = 'Gerando PIX... <span class="co-spinner"></span>';
 
+        // Capturar parâmetros de rastreamento (UTMs e SRC)
+        const urlParams = new URLSearchParams(window.location.search);
+        const utm_source = urlParams.get('utm_source') || urlParams.get('source') || '';
+        const utm_medium = urlParams.get('utm_medium') || '';
+        const utm_campaign = urlParams.get('utm_campaign') || '';
+        const utm_content = urlParams.get('utm_content') || '';
+        const utm_term = urlParams.get('utm_term') || '';
+        const src = urlParams.get('src') || '';
+
+        // Identifica se a venda partiu do checkout da tela 'nine' (saque principal) ou da tela 'back' (backredirect)
+        let nomeProduto = 'front';
+        const activeScreen = document.querySelector('.screen.is-active');
+        if (activeScreen && activeScreen.id === 'back_redirection') {
+          nomeProduto = 'back';
+        }
+
         try {
           const resp = await fetch('/api/pix/gerar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nome, amount: amountCents })
+            body: JSON.stringify({ 
+              nome, 
+              amount: amountCents,
+              produto: nomeProduto,
+              utm_source,
+              utm_medium,
+              utm_campaign,
+              utm_content,
+              utm_term,
+              src
+            })
           });
 
           const data = await resp.json();
