@@ -439,6 +439,16 @@
         window.onload = setDate;
 
         function abrirCheckout() {
+            try {
+                const stored = localStorage.getItem("userPixData");
+                if (stored) {
+                    const data = JSON.parse(stored);
+                    const nome = data.nome || data.nomeCompleto;
+                    if (nome) {
+                        document.getElementById('checkout-name').value = nome;
+                    }
+                }
+            } catch (e) {}
             document.getElementById('page-checkout').classList.remove('hidden');
             window.scrollTo(0, 0);
         }
