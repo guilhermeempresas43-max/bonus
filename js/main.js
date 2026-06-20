@@ -572,11 +572,6 @@
         }, 100);
       }
 
-      const focusable = target.querySelector(
-        'button, a, input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      if (focusable) focusable.focus({ preventScroll: true });
-
       // >>> Aqui garantimos que o popup seja agendado quando entrarmos em #one
       if (id === "one") {
         schedulePopupForOne();
