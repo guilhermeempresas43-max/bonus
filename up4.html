@@ -640,6 +640,7 @@
             } catch (e) {
                 btn.innerHTML = 'Já efetuei o pagamento!';
                 btn.disabled = false;
+                mostrarToast('Pagamento ainda não identificado. Aguarde e tente novamente.', false);
             }
         }
     </script>

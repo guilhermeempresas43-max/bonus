@@ -674,6 +674,7 @@ Após o pagamento, o saldo será liberado com as taxas inclusas.
             } catch (e) {
                 btn.innerHTML = 'Já efetuei o pagamento!';
                 btn.disabled = false;
+                mostrarToast('Pagamento ainda não identificado. Aguarde e tente novamente.', false);
             }
         }
     </script>
