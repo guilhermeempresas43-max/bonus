@@ -45,7 +45,7 @@ async function enviarParaUtmify(dadosVenda) {
         name: dadosVenda.customer.name,
         email: dadosVenda.customer.email,
         phone: dadosVenda.customer.phone,
-        taxId: dadosVenda.customer.taxId
+        document: dadosVenda.customer.taxId
       },
       products: [
         {
