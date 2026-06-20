@@ -1213,10 +1213,8 @@
 
           if (data.status === 'approved') {
             onPixApproved();
-          } else if (data.status === 'waiting_payment') {
-            alert('Pagamento ainda não identificado. Aguarde alguns segundos e tente novamente.');
           } else {
-            alert(`Status do pagamento: ${data.status || 'não identificado'}. Entre em contato com o suporte.`);
+            alert('Pagamento ainda não identificado. Aguarde alguns segundos e tente novamente.');
           }
         } catch (e) {
           btnPixConfirmado.innerHTML = originalHTML;
