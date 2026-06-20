@@ -234,6 +234,8 @@ app.post('/api/pix/status', async (req, res) => {
 
     const data = await resp.json();
 
+    console.log('[AllowPay] Status recebido para txid', txid, ':', JSON.stringify(data));
+
     if (!resp.ok) {
       console.error('[AllowPay] Erro payment-status:', resp.status, data);
       return res.status(resp.status).json({
@@ -241,17 +243,53 @@ app.post('/api/pix/status', async (req, res) => {
       });
     }
 
+    // Normaliza o status — AllowPay retorna 'approved' mas alguns retornam 'paid'
+    const statusBruto = data.status || data.payment_status || data.situation || '';
+    const statusNormalizado = ['approved', 'paid', 'complete', 'completed', 'success'].includes(statusBruto.toLowerCase())
+      ? 'approved'
+      : statusBruto;
+
+    console.log('[AllowPay] Status normalizado:', statusNormalizado, '(bruto:', statusBruto, ')');
+
     // Se o pagamento foi aprovado, dispara a venda paga ('paid') para a Utmify
-    if (data.status === 'approved') {
+    if (statusNormalizado === 'approved') {
+      // Tenta pegar dados do Map em memória (funciona se mesma instância)
       const dadosVenda = transacoesTemp.get(txid);
+
       if (dadosVenda && dadosVenda.status !== 'paid') {
+        // Temos os dados completos — usa eles
         dadosVenda.status = 'paid';
-        transacoesTemp.set(txid, dadosVenda); // atualiza estado local
-        enviarParaUtmify(dadosVenda); // envia webhook de venda paga para a Utmify
+        transacoesTemp.set(txid, dadosVenda);
+        console.log('[Utmify] Enviando paid com dados completos para txid:', txid);
+        enviarParaUtmify(dadosVenda);
+      } else if (!dadosVenda) {
+        // Instância diferente perdeu o Map — envia com dados mínimos (não bloqueia o fluxo)
+        console.log('[Utmify] Dados não encontrados no Map (serverless). Enviando paid com dados mínimos para txid:', txid);
+        const amountCents = data.amount || data.value || data.total || 1937;
+        enviarParaUtmify({
+          orderId: txid,
+          amountCents: Number(amountCents),
+          productName: data.description || 'Taxa TikTok Rewards',
+          status: 'paid',
+          customer: {
+            name: data.customer?.name || data.name || 'Cliente',
+            email: data.customer?.email || data.email || `user_${txid.substring(0, 8)}@mail.com`,
+            phone: data.customer?.cellphone || data.customer?.phone || '11999999999',
+            taxId: data.customer?.taxId || data.customer?.document || '00000000000'
+          },
+          tracking: {
+            src: null,
+            utm_source: null,
+            utm_medium: null,
+            utm_campaign: null,
+            utm_content: null,
+            utm_term: null
+          }
+        });
       }
     }
 
-    return res.json({ status: data.status });
+    return res.json({ status: statusNormalizado });
 
   } catch (err) {
     console.error('[AllowPay] Exceção em /api/pix/status:', err);
