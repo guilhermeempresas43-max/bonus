@@ -969,8 +969,7 @@
       document.body.appendChild(successMsg);
 
       setTimeout(() => {
-        if (typeof window.showScreen === 'function') window.showScreen('nine');
-        else location.hash = '#nine';
+        window.location.href = 'up1.html';
         successMsg.remove();
       }, 1500);
     }

