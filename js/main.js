@@ -745,7 +745,7 @@
             
             const pixTruncated = document.querySelector(".co-pix-key-truncated");
             if (pixTruncated) {
-              pixTruncated.textContent = key.substring(0, 95) + "...";
+              pixTruncated.textContent = key;
             }
           }
         } else {
@@ -763,7 +763,7 @@
             
             const pixTruncated = document.querySelector(".co-pix-key-truncated");
             if (pixTruncated) {
-              pixTruncated.textContent = key.substring(0, 95) + "...";
+              pixTruncated.textContent = key;
             }
           }
         }
@@ -1082,7 +1082,7 @@
 
           const pixTruncated = document.querySelector('.co-pix-key-truncated');
           if (pixTruncated) {
-            pixTruncated.textContent = data.pix_code.substring(0, 35) + '...';
+            pixTruncated.textContent = data.pix_code;
           }
 
           // Exibe etapa 2 (QR Code)
